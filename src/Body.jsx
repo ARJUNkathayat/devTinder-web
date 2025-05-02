@@ -18,7 +18,7 @@ const Body = () => {
       const res = await axios.get("http://localhost:7000/profile/view", {
         withCredentials: true,
       });
-      console.log("uuuuuuu",res)
+     
       dispatch(addUser(res.data));  // 👈 dispatch only the actual user data
     } catch (err) {
       if(err.status == 401){

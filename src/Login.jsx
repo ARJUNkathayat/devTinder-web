@@ -8,6 +8,7 @@ const Login = () => {
   const emailref = useRef(null);
   const passwordref = useRef(null);
   const [form, setform] = useState(true);
+  const [error,seterror]=useState(null);
 
   const changeFormState = () => setform(prev => !prev);
   const dispatch = useDispatch()
@@ -33,7 +34,8 @@ const Login = () => {
       dispatch(addUser(res.data))
       navigate("/")
     } catch (err) {
-      console.error(err);
+      console.error("bkl",err);
+      seterror(err.response.data)
     }
   };
 
@@ -57,14 +59,23 @@ const Login = () => {
               type="text"
               ref={emailref}
               placeholder="Enter your Email"
+              defaultValue="eren.yeager@example.com"  
               className="input input-bordered w-full"
             />
             <input
               type="password"
               ref={passwordref}
+              defaultValue="securePassword@123"  
               placeholder="Enter your Password"
               className="input input-bordered w-full"
             />
+            
+            {error && (
+  <p className="text-red-600 font-bold">
+    {error}
+  </p>
+)}
+
             <button className="btn btn-primary w-full">Submit</button>
             <div className="flex gap-2">
               <p>{form ? "New to DevTinder?" : "Already have an account?"}</p>
