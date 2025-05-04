@@ -59,13 +59,13 @@ const Login = () => {
               type="text"
               ref={emailref}
               placeholder="Enter your Email"
-              defaultValue="eren.yeager@example.com"  
+              defaultValue="rahul.sharma@example.com"  
               className="input input-bordered w-full"
             />
             <input
               type="password"
               ref={passwordref}
-              defaultValue="securePassword@123"  
+              defaultValue="Rahul@123"  
               placeholder="Enter your Password"
               className="input input-bordered w-full"
             />

@@ -26,7 +26,7 @@ const Connections = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Connections</h2>
 
-      {connectionData.length === 0 ? (
+      {!connectionData || connectionData?.length === 0 ? (
         <p className="text-center text-gray-500">No connections found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
