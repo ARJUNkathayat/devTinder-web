@@ -5,37 +5,59 @@ import { addUser } from './utils/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const emailref = useRef(null);
-  const passwordref = useRef(null);
-  const [form, setform] = useState(true);
-  const [error,seterror]=useState(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const [form, setForm] = useState(true); // true = login, false = signup
+  const [error, setError] = useState(null);
 
-  const changeFormState = () => setform(prev => !prev);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmitOnLogin = async (e) => {
+  const toggleForm = () => {
+    setForm(prev => !prev);
+    setError(null);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = emailref.current.value;
-    const password = passwordref.current.value;
-
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const firstName = firstNameRef?.current?.value;
+    const lastName = lastNameRef?.current?.value;
 
     try {
-      const res = await axios.post("http://localhost:7000/Login", {
-        email,
-        password
-      },{
-        withCredentials:true
+      const url = form
+        ? "http://localhost:7000/Login"
+        : "http://localhost:7000/Signup";
+
+       
+      const payload = form
+        ? { email, password }
+        : { email, password, firstName, lastName };
+        console.log("Payload being sent:", payload);
+
+
+      const res = await axios.post(url, payload, {
+        withCredentials: true,
       });
-     
-      dispatch(addUser(res.data))
-      navigate("/")
+
+      dispatch(addUser(res.data));
+      dispatch(addUser(res.data));
+
+if (form) {
+  navigate("/"); 
+} else {
+  navigate("/profile"); 
+}
+
+
+      
     } catch (err) {
-      console.error("bkl",err);
-      seterror(err.response.data)
+      console.error("Error:", err);
+      setError(err?.response?.data || "Something went wrong");
     }
   };
 
@@ -54,32 +76,53 @@ const Login = () => {
             Welcome To DevTinder
           </h1>
           <h2 className="text-center text-xl mb-6">{form ? "Login" : "Signup"}</h2>
-          <form className="space-y-4" onSubmit={handleSubmitOnLogin}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
-              type="text"
-              ref={emailref}
+              type="email"
+              ref={emailRef}
               placeholder="Enter your Email"
-              defaultValue="rahul.sharma@example.com"  
               className="input input-bordered w-full"
+              required
             />
+
+            {!form && (
+              <>
+                <input
+                  type="text"
+                  ref={firstNameRef}
+                  placeholder="Enter your First Name"
+                  className="input input-bordered w-full"
+                  required
+                />
+                <input
+                  type="text"
+                  ref={lastNameRef}
+                  placeholder="Enter your Last Name"
+                  className="input input-bordered w-full"
+                  required
+                />
+              </>
+            )}
+
             <input
               type="password"
-              ref={passwordref}
-              defaultValue="Rahul@123"  
+              ref={passwordRef}
+            
               placeholder="Enter your Password"
               className="input input-bordered w-full"
+              required
             />
-            
-            {error && (
-  <p className="text-red-600 font-bold">
-    {error}
-  </p>
-)}
 
-            <button className="btn btn-primary w-full">Submit</button>
+            {error && (
+              <p className="text-red-600 font-bold">{error}</p>
+            )}
+
+            {form ? <button className="btn btn-primary w-full">Submit</button> : <button className="btn btn-primary w-full">Create your Account</button>}
+
+            
             <div className="flex gap-2">
               <p>{form ? "New to DevTinder?" : "Already have an account?"}</p>
-              <p className="font-bold text-blue-500 cursor-pointer" onClick={changeFormState}>
+              <p className="font-bold text-blue-500 cursor-pointer" onClick={toggleForm}>
                 {form ? "Signup" : "Login"}
               </p>
             </div>

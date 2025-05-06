@@ -23,10 +23,8 @@ const Feed = () => {
   return (
 
     (feedStore &&
-    <div className='bg-black h-[43rem]'>
-      {feedStore.map(people =><UserCard key={people._id}  user={people}/>)}
-    
-    </div>
+   
+    <UserCard user={feedStore[0]}/>
   ))
 }
 
